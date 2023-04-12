@@ -8,47 +8,25 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform'
-    env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-      RG_NAME: tamops-rg-github
     runs-on: ubuntu-latest
-    environment: production
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
-      run:
-        shell: bash
+    env:
+      ARM_CLIENT_ID: ${{secrets.ARM_CLIENT_ID}
+      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
+      ARM_SUBSCRIPTION_ID: ${{secrets.ARM_SUBSCRIPTION_ID}
+      ARM_TENANT_ID: ${secrets.ARM_TENANT_ID}
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    # - name: Azure Login
-    #   uses: azure/login@v1
-    #   with:
-    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-    
-    - name: terraform init
-      run: |
-        terraform init
-        
-    #   # env:
-    #   #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Terraform Init
+        run: terraform init
 
-    # - name: terraform Plan
-    #   run: terraform plan -input=false -var 'rg_name=$RG_NAME'
-    #   # env:
-    #   #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Terraform Format
+        run: terraform fmt -check
 
-    # - name: terraform Apply
-    #   run: terraform apply -auto-approve -input=false -var 'rg_name=$RG_NAME'
-    #   # env:
-    #   #     AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Terraform Plan
+        run: terraform plan
