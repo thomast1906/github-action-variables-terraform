@@ -28,10 +28,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    # - name: Azure Login
-    #   uses: azure/login@v1
-    #   with:
-    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -39,9 +39,9 @@ jobs:
     - name: terraform init
       run: |
         export ARM_CLIENT_ID=$ARM_CLIENT_ID
-        # export ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET
-        # export ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID
-        # export ARM_TENANT_ID=$ARM_TENANT_ID
+        export ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET
+        export ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID
+        export ARM_TENANT_ID=$ARM_TENANT_ID
         echo "ID is: $ARM_CLIENT_ID"
         terraform init
     #   # env:
